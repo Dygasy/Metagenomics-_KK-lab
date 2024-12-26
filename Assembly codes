@@ -69,3 +69,22 @@ this is used on X401SC24100039-Z01-F001_03 where the megahit_output is located i
 some of the files (eg: AA_0008) does not have an output.sam, rerun your bowtie2 and perform SAM filtering and then extract your non human reads. 
 
 theres a possibility that MEGAHIT might overwrite completed assemblies and will skip them by default unless -o specifies an overwrite. you might have to rerun a couple of times
+
+this code is to make it similar to X401SC24100039-Z01-F001_02 just that they will skip those with existing megahit results already.
+
+find /mnt/e/X401SC24100039-Z01-F001_03/01.RawData/AA_* -type d | while read folder; do
+    # Extract the folder name
+    sample_name=$(basename $folder)
+
+    # Construct the path to the non_human_cleaned.fq file
+    fq_file="$folder/non_human_cleaned.fq"
+
+    # Check if the FASTQ file exists
+    if [ -f "$fq_file" ]; then
+        echo "megahit -r $fq_file -o /mnt/e/MEGAHIT_results/${sample_name} --num-cpu-threads 4 --memory 28000"
+    else
+        echo "echo 'No non-human_cleaned.fq file found in $folder. Skipping...'"
+    fi
+done > megahit_job_list.txt
+parallel -j 4 < megahit_job_list.txt
+
