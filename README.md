@@ -1,1 +1,1 @@
-The brances connected to this main branch are the diff steps i implemented to process my metagenomic sequences. I've profiled them according to the classification found in the workflow. baby steps to processing metagenomics sequencing. ** might contain flaws** because i graduated from chatgpt 
+
