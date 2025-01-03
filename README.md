@@ -169,8 +169,8 @@ parallel -j 4 < megahit_job_list.txt
 We do face some samples that have missing results. All you need to do is rerun Bowtie2, extract non-human reads, and repeat MEGAHIT process for those folders. 
 To avoid overwritign, MEGAHIT skips completed results unless explicitly specified with -o.
 
-##Gene Analysis Stage using MetaGeneMark
-###Overview 
+## Gene Analysis Stage using MetaGeneMark
+### Overview 
 The gene analysis process begins with **MetaGeneMark**, a tool for gene prediciton in metagenomic sequences. Below is a step-by-step guide to process your samples using the MetaGeneMark web interface. 
 
 ###Steps to Process Samples###
