@@ -187,6 +187,7 @@ GFF format provides detailed annotations, which are useful for downstream analys
 * Check the boxes for:
   1. **Protein Sequences (outputs a .faa file)
   2. **Gene Nucleotide Sequences) (output a .fnn file)
+ 
 **3.Start Processing**
 * Click on the **Start GeneMark.hmm** button to begin the analysis.
 
