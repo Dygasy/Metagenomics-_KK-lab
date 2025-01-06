@@ -196,6 +196,7 @@ GFF format provides detailed annotations, which are useful for downstream analys
    * gmhmmp.out.faa: Predicted protein sequences
    * gmhmmp.out.gnn: Gene nucleotides sequences
 * Manually download each file by clicking the respective links
+
 **5.Organise the results**
  * Save the downloaded files into the appropriate folder (eg,., MEGAHIT_results/AA_0004), ensuring proper organisation for downstream analysis 
 
