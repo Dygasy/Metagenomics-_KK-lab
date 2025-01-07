@@ -70,6 +70,31 @@ extract() {
 }
 extract *
 ```
+```bash
+base_dir="/mnt/e/X401SC24100039-Z01-F001_01/01.RawData"
+
+for folder in "$base_dir"/AA_*; do
+    echo "Processing folder: $folder"
+    
+    # Find FASTQ or gzipped FASTQ files
+    find "$folder" -type f \( -name "*.fq" -o -name "*.fastq" -o -name "*.fq.gz" -o -name "*.fastq.gz" \) | while read -r fastq_file; do
+        echo "Found: $fastq_file"
+
+        # If file is gzipped, decompress it
+        if [[ "$fastq_file" == *.gz ]]; then
+            echo "Decompressing: $fastq_file"
+            gunzip "$fastq_file"
+        fi
+
+        # Optionally convert to FASTA
+        decompressed_file="${fastq_file%.gz}"  # Remove .gz extension
+        echo "Processing: $decompressed_file"
+        seqkit fq2fa "$decompressed_file" -o "${decompressed_file%.fq}.fa"
+    done
+done
+
+echo "All FASTQ files processed!"
+```
 
 #### 4. **Move the decompress files**
 
