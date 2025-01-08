@@ -14,7 +14,7 @@ This repository provides scripts and pipelines for analyzing metagenomics data. 
 1. [Introduction](#introduction)
 2. [Getting Started](#getting-started)
 3. [Workflow](#workflow)
-4. [Preprocessing Stage](#Preprocessing Stage)
+4. [Preprocessing Stage](#Preprocessing-stage)
 5. [Results](#results)
 6. [References](#references)
 7. [Contributing](#contributing)
