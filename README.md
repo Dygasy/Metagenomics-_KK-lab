@@ -281,6 +281,94 @@ GFF format provides detailed annotations, which are useful for downstream analys
 
 Manual downloads ensure better control over the extraction process, avoiding complications with compressed files. tried it and it didnt work. 
 
+## Taxonomic Classification using Kraken 2
+**1.Use of Pre-built Microbial Database**
+Many pre-built microbial reference database are optimised for metagenomics:
+1. Kraken2/Bracken databases (containe microbial genomes)
+2. RefSeq Microbial / NCBI nt database for broad coverage
+3. For Bowtie2 you can convert these databases into a compatible formate
+
+**NCBI nt Database (with Bowtie2)**
+This is if you are looking to specifically aligned and have detailed taxonomic or functional annotations
++ Comprehensive: contains all publicly available nucleotide sequences, allowing for in-depth identification
++ High Specificity: Alignments are precise, which is useful for accurate identification
++ Versatile: Suitable for downstream functional analysis (eg gene identification or annotation)
+
+- Computationally extensive: The massive nt database requires significant memory, storage and time
+- hundreds of GBs will be downloaded
+- More manual work to extract meaningful taxonomic or functional insights
+
+We will be using Kraken2 in the meantime for quick and efficient taxonomic classificationof metagenomic reads.
++ Kraken2 uses k-mer based classification, making it extremely fast
++ Lightweight: no need to align entire sequences, saves time and computational power
++ Built in classification: automatically assigns reads to taxa, making it simpler for metagenomics workflows
++ Pre-built function with a focus on just bacterial composition.
+
+- no detailed alignments are being performed, it provides probabilistic taxonomic assignments based on k-mers
+- may possibly missed novel or uncommon sequences not in the databases
+- might take considerable storage space
+
+**2.Download and set up Kraken2**
+```bash
+sudo apt install kraken2
+```
+create a directory on Data (E:) drive:
+```base
+mkdir -p /mnt/e/kraken2_db
+```
+
+Download the pre-built bacterial database
+```bash
+kraken2-build --standard --db /path/to/kraken2_db
+```
+or Download it from Kraken2 official database repository instead
+```bash
+wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20230605.tar.gz
+```
+then extract
+```bash
+tar -xvzf k2_standard_20230605.tar.gz -C /mnt/e/kraken2_db
+```
+
+Check the database after the build
+```bash
+ls /mnt/e/kraken2_db
+```
+
+
+Run Kraken2
+```bash
+#!/bin/bash
+
+base_dir="/mnt/e/MEGAHIT_results"
+kraken_db="/path/to/kraken2_db"
+
+find "$base_dir" -type f -name "clustered_genes.fnn" | parallel -j 4 -- \
+    kraken2 --db "$kraken_db" \
+            --threads 4 \
+            --output {= s/.fnn/_kraken2_output.txt/ =} \
+            --report {= s/.fnn/_kraken2_report.txt/ =} \
+            {}
+```
+
+Your output file contains kraken2 classification for each sequence (readID, taxonomic classification, etc)
+Your report file contains summary of taxonomic classifcation (eg; abundance of bacteria, archaea, viruses)
+
+**3.Post-Processing using visualisation tools like Krona**
+
+Krona is a visualisation tools that can generate interactive taxonomic charts
+1. Install Krona
+```bash
+sudo apt install krona
+```
+
+Convert Kraken2 report to Krona-compatible format:
+```bash
+cut -f 2,3 /path/to/sample_kraken2_report.txt > krona_input.txt
+ktImportText krona_input.txt -o sample_krona.html
+```
+
+
 ### Prerequisites
 - Python (version >= 3.9)
 - Miniconda
