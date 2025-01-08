@@ -3,7 +3,7 @@
 ## Workflow Diagram
 Below is the workflow diagram for the metagenomics analysis process:
 
-![Workflow Diagram](Initial%20workflow%20diagram%20.png)
+![Workflow Diagram](Initial%20Workflow%20Diagram.png)
 
 
 ---
