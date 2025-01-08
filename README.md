@@ -120,13 +120,64 @@ Purpose of readfq is to provide summary statistics for reads (sequence count, to
 Purpose of bowtie2 is to align reads to a reference genome to remove host DNA.
 
 **Processing of raw files with readfq**
+Download readfq.py 
 ```bash
-for file in $(find /mnt/e/X401SC24100039-Z01-F001_02/01.RawData -type f -name "*.fq"); do
-    output_file="${file%.fq}_processed.fq"
-    python3 /mnt/e/X401SC24100039-Z01-F001_02/01.RawData/readfq/readfq.py < "$file" > "$output_file"
-    echo "Processed $file -> $output_file"
-done
+ wget -O /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/readfq/readfq.py https://raw.githubusercontent.com/lh3/readfq/master/readfq.py
 ```
+Open the file using text editor:
+```bash
+nano /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/readfq/readfq.py
+```
+Ensure the first line reads:
+def readfq(fp):  # this is a generator function
+
+If any unexpected characters are present (e.g., / before def), remove them.
+Locate all lines with print statements (e.g., print n, '\t', slen, '\t', qlen) and modify them like this:
+```bash
+print(n, '\t', slen, '\t', qlen)
+```
+Make the script executable again:
+```bash
+chmod +x /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/readfq/readfq.py
+```
+The following script ensures only the original .fq files are processed and skips those already processed:
+
+bash
+Copy code
+#!/bin/bash
+
+# Base directory containing the .fq files
+base_dir="/mnt/e/X401SC24100039-Z01-F001_01/01.RawData"
+
+# Path to the readfq script
+readfq_script="$base_dir/readfq/readfq.py"
+
+# Iterate through each .fq file in the directory
+find "$base_dir" -type f -name "*.fq" | grep -v "_processed.fq" | while read -r fq_file; do
+    # Define the output file
+    output_file="${fq_file%.fq}_processed.fq"
+
+    # Skip if the output file already exists
+    if [[ -f "$output_file" ]]; then
+        echo "Skipping $fq_file as $output_file already exists."
+        continue
+    fi
+
+    echo "Processing $fq_file -> $output_file"
+
+    # Run the Python script
+    python3 "$readfq_script" < "$fq_file" > "$output_file"
+
+    # Check for errors
+    if [[ $? -ne 0 ]]; then
+        echo "Error processing $fq_file. Exiting."
+        exit 1
+    fi
+done
+
+echo "All files processed!"
+```
+
 #### 6. **Install Bowtie2 and Reference Genome**
 
 ```bash
