@@ -143,9 +143,8 @@ Make the script executable again:
 chmod +x /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/readfq/readfq.py
 ```
 The following script ensures only the original .fq files are processed and skips those already processed:
+```bash
 
-bash
-Copy code
 #!/bin/bash
 
 # Base directory containing the .fq files
