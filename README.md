@@ -41,16 +41,17 @@ Commands to set up the environment:
 ```bash
 conda create -n metagenomics_env python=3.9
 conda activate metagenomics_env
+```
 
 #### 2. **Verify Raw Sequence Files**
 ``` bash 
 file X401SC24100039-Z01-F001_02.tar or 03.tar
 ```
 To extract the archive: 
-
 ``` bash
 tar -xvf X401SC24100039-Z01-F001_02.tar
 ```
+
 #### 3. **Automate Extraction of Nested Archives (folders that are compressed to be extracted)**
 ```bash
 #!/bin/bash
@@ -70,6 +71,7 @@ extract() {
 }
 extract *
 ```
+
 ```bash
 base_dir="/mnt/e/X401SC24100039-Z01-F001_01/01.RawData"
 
@@ -98,7 +100,7 @@ echo "All FASTQ files processed!"
 
 #### 4. **Move the decompress files**
 
-files can be too large and will require a bigger storage, that is why i am moving mine over to storage DATA:(E)
+files can be too large and will require a bigger storage, that is why i am moving mine over to storage DATA:(E) that has 10tb storage
 
 ```bash
 cd /mnt/e
