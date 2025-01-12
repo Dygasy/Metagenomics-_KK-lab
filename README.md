@@ -193,14 +193,34 @@ Place the .bt2 index files in the appropriate folder and verify:
 ```bash
 ls /mnt/e/X401SC24100039-Z01-F001_02/01.RawData
 ```
+
 #### 7. **Run Bowtie2 for Host Genome Removal**
 
-Test it out on one smaple to test:
+Test it out on one smaple to test for bowtie2 alignment:
 ```bash
 bowtie2 -x /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/bowtie2_index/GRCh38_noalt_as \
     -1 /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/AA_0141/AA_0141_DKDN240043855-1A_22TMJFLT3_L1_1.fq \
     -2 /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/AA_0141/AA_0141_DKDN240043855-1A_22TMJFLT3_L1_2.fq \
     -S /mnt/e/X401SC24100039-Z01-F001_01/01.RawData/AA_0141/output.sam
+```
+
+Convert and Sort BAM
+If output.sam is successfully generated, proceed to convert it to BAM and sort:
+
+```bash
+samtools view -bS /mnt/e/X401SC24100039-Z01-F001_02/01.RawData/AA_0008/output.sam | \
+samtools sort -o /mnt/e/X401SC24100039-Z01-F001_02/01.RawData/AA_0008/sorted_output.bam
+```
+Index the BAM File
+
+```bash
+samtools index /mnt/e/X401SC24100039-Z01-F001_02/01.RawData/AA_0008/sorted_output.bam
+```
+Extract Non-Human Reads by generating the non_human_cleaned.fq file:
+
+```bash
+samtools fastq -f 12 -F 256 /mnt/e/X401SC24100039-Z01-F001_02/01.RawData/AA_0008/sorted_output.bam > \
+/mnt/e/X401SC24100039-Z01-F001_02/01.RawData/AA_0008/non_human_cleaned.fq
 ```
 
 ## Assembly using MEGAHIT
