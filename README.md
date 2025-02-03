@@ -371,8 +371,27 @@ find "$base_dir" -type f -name "clustered_genes.fnn" | parallel -j 4 -- \
             {}
 ```
 
+
+
 Your output file contains kraken2 classification for each sequence (readID, taxonomic classification, etc)
 Your report file contains summary of taxonomic classifcation (eg; abundance of bacteria, archaea, viruses)
+
+Kraken2 alone assigns taxonomic labels based on k-mer matches, which can sometimes lead to fragmented or inconsistent taxonomy assignments. 
+
+Use DIAMOND+MEGAN:
+1. assigns taxonomy based on BLAST-LIKE alignments to protein databases (more accurate than Kraken2)
+2. Use Lowest Common Ancestor (LCA) classification to improve placement
+3. provide structured taxonomic paths
+
+**3.Post-Processing using DIAMOND**
+Download the preformatted DIAMOND version of the NCBI nr protein database
+```bash
+ wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz
+gunzip nr.gz
+diamond makedb --in nr -d nr
+```
+
+The codes above downloads the latest nr database from NCBI, decompresses the file and then converts nr into a DIAMOND compatible format.
 
 **3.Post-Processing using visualisation tools like Krona**
 
@@ -380,6 +399,18 @@ Krona is a visualisation tools that can generate interactive taxonomic charts
 1. Install Krona
 ```bash
 sudo apt install krona
+```
+2. Ensure taxonomy file in KronaTools-2.8.1 has the following taxonomic data files:
+names.dmp
+nodes.dmp
+merged.dmp
+delnodes.dmp
+
+if not, download the full taxonomy database:
+
+```bash
+wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+tar -xvzf taxdump.tar.gz -C /mnt/e/Krona_results/KronaTools-2.8.1/taxonomy
 ```
 
 Convert Kraken2 report to Krona-compatible format:
