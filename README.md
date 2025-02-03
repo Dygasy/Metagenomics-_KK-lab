@@ -393,7 +393,7 @@ diamond makedb --in nr -d nr
 
 The codes above downloads the latest nr database from NCBI, decompresses the file and then converts nr into a DIAMOND compatible format.
 
-**3.Post-Processing using visualisation tools like Krona**
+**4.Post-Processing using visualisation tools like Krona**
 
 Krona is a visualisation tools that can generate interactive taxonomic charts
 1. Install Krona
@@ -428,9 +428,9 @@ ktImportText krona_input.txt -o sample_krona.html
   - readfq,bowtie2
   - MEGAHIT
   - MetaGeneMark
-  - Trimmomatic
+  - DIAMOND                
   - Kraken2
-  - SPAdes
+  - MEGAN
   - Prokka
 
 ### Installation
