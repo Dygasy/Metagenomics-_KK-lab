@@ -393,6 +393,22 @@ diamond makedb --in nr -d nr
 
 The codes above downloads the latest nr database from NCBI, decompresses the file and then converts nr into a DIAMOND compatible format.
 
+rebuilt diamond database: 
+```bash
+mkdir -p /mnt/e/Krona_results/nr_db/taxonomy
+cd /mnt/e/Krona_results/nr_db/taxonomy
+
+# Download taxonomy nodes, names, and taxon mapping
+wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz
+wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/taxonomy/taxonomy.dat.gz
+
+# Extract the files
+unzip taxdmp.zip
+tar -xvzf taxdb.tar.gz
+gunzip taxonomy.dat.gz
+```
+
 **4.Post-Processing using visualisation tools like Krona**
 
 Krona is a visualisation tools that can generate interactive taxonomic charts
