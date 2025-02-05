@@ -392,6 +392,23 @@ Your report file contains summary of taxonomic classifcation (eg; abundance of b
 
 Kraken2 alone assigns taxonomic labels based on k-mer matches, which can sometimes lead to fragmented or inconsistent taxonomy assignments. 
 
+Now convert your clustered_genes.fnn file into an input.fasta. input.fasta file is the query sequence file that you provide for DIAMOND (next software) to search against the nr database. It contains the nucleotide or protein sequences that you want to analyse. 
+```bash
+cp /mnt/e/Krona_results/above_ids_group/AA_0142/clustered_genes.fnn /mnt/e/Krona_results/nr_db/input.fasta
+```
+
+verify that the input.fasta is correctly formatted. it should look something like this (so prettyyy):
+>gene_1|GeneMark.hmm|348_nt|-|2|349 >k141_0 flag=1 multi=3.0000 len=378
+ATGAGTGAATTAGGTTTGGTATTGCTCTTGTTGGCAGGTTTTGCTCAAGGGTCTTTTGGC
+TTAGGTATGAAGAAACAGTCTCCATTGTCATGGGAGTCGTTCTGGTTGATTTATTCATTG
+TTTGCTATGCTTGTCGTTCCTTTTGTATGGGGATACGCAGGTTTTGATTCCTTCATGGAG
+TCAATATTAATGACAGATTCGAAAGTAATTATGACATCACTGCTTTTAGGCTTTTTGTGG
+GGTATTGGTGGAATTTTATTTGGAATGAGTGTCTCTTATGTTGGAATATCTATAACCAAT
+GGGGTAGTAATGGGATTGGCCGGAGGTCTTGGAGCCATAATTCCTTTG
+
+
+>gene_2|GeneMark.hmm|360_nt|-|220|579 >k141_98136 flag=1 multi=2.0000 len=580
+
 Use DIAMOND+MEGAN:
 1. assigns taxonomy based on BLAST-LIKE alignments to protein databases (more accurate than Kraken2)
 2. Use Lowest Common Ancestor (LCA) classification to improve placement
@@ -405,10 +422,10 @@ We will be using NCBI's nr database, input the metagenomic reads to produce an o
 Download the nr directly from NCBI FTP.
 ```bash
   wget -c ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz -P /mnt/e/Krona_results/
-gunzip nr.gz
+gunzip -c /mnt/e/Krona_results/nr.gz > /mnt/e/Krona_results/nr.fasta
 diamond makedb --in nr -d nr 
 ```
-last step for diamond makedb --in nr -d nr --> this is to convert to Diamond-compatible database, generating nr.dmnd
+third step for diamond makedb --in nr -d nr --> this is to convert to Diamond-compatible database, generating nr.dmnd
 
 The codes above downloads the latest nr database from NCBI, decompresses the file and then converts nr into a DIAMOND compatible format.
 
@@ -418,7 +435,7 @@ however, generating the NCBI nr database is not enough as it only contains the p
 mkdir -p /mnt/e/Krona_results/nr_db/taxonomy
 cd /mnt/e/Krona_results/nr_db/taxonomy
 ```
-# Download taxonomy nodes, names, and taxon mapping
+## Download taxonomy nodes, names, and taxon mapping
 ```bash
 wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz
 wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
@@ -426,14 +443,34 @@ wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
 prot.accession is for DIAMOND to link protein sequences with TaxIDs.
 taxdump is for DIAMOND to interpret the taxonomic relationships. 
 
-# Extract the files
+## Extract the files
 ```bash
 gunzip prot.accession2taxid.gz
 tar -xvf taxdump.tar.gz
 ```
+DIAMOND requires your taxonomy files and database to be together during database creation. Hence, you need to rebuild your nr.dmnd with taxonomy information to generate: nr.fasta
 
-Next up: Run DIAMOND with Taxonomy
-DIAMOND BLASTX to generate diamond_output.daa
+## Next up: Run DIAMOND with Taxonomy
+DIAMOND BLASTX to generate diamond_output.daa but first you will convert nr.fasta into diamond database **with taxonomy**
+```bash
+diamond makedb \
+    --in /mnt/e/Krona_results/nr.fasta \
+    -d /mnt/e/Krona_results/nr/nr_tax.dmnd \
+    --taxonmap /mnt/e/Krona_results/nr_db/taxonomy/prot.accession2taxid \
+    --taxonnodes /mnt/e/Krona_results/nr_db/taxonomy/nodes.dmp \
+    --taxonnames /mnt/e/Krona_results/nr_db/taxonomy/names.dmp
+```
+
+Now run DIAMOND BLASTX once you've created nr_tax.dmnd
+```bash
+diamond blastx \
+    -d /mnt/e/Krona_results/nr/nr_tax.dmnd \
+    -q /mnt/e/Krona_results/nr_db/input.fasta \
+    -o /mnt/e/Krona_results/nr_db/diamond_output.daa \
+    --evalue 0.001 \
+    --max-target-seqs 1 \
+    --outfmt 6 qseqid staxids sscinames sskingdoms evalue bitscore
+```
 
 
 **4.Post-Processing using visualisation tools like Krona**
