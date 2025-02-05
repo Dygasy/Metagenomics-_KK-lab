@@ -432,6 +432,10 @@ gunzip prot.accession2taxid.gz
 tar -xvf taxdump.tar.gz
 ```
 
+Next up: Run DIAMOND with Taxonomy
+DIAMOND BLASTX to generate diamond_output.daa
+
+
 **4.Post-Processing using visualisation tools like Krona**
 
 Krona is a visualisation tools that can generate interactive taxonomic charts
