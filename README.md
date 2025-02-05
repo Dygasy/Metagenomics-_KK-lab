@@ -383,30 +383,39 @@ Use DIAMOND+MEGAN:
 2. Use Lowest Common Ancestor (LCA) classification to improve placement
 3. provide structured taxonomic paths
 
+You would want to import DIAMOND Results into MEGAN
+MEGAN is faster alternative to BLAST for classifying reads but first you have to run DIAMOND with taxonomy output enabled.
 **3.Post-Processing using DIAMOND**
-Download the preformatted DIAMOND version of the NCBI nr protein database
+We will be using NCBI's nr database, input the metagenomic reads to produce an output DIAMOND results. Filter the weak matches and report only the best match.
+
+Download the nr directly from NCBI FTP.
 ```bash
- wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz
+  wget -c ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nr.gz -P /mnt/e/Krona_results/
 gunzip nr.gz
-diamond makedb --in nr -d nr
+diamond makedb --in nr -d nr 
 ```
+last step for diamond makedb --in nr -d nr --> this is to convert to Diamond-compatible database, generating nr.dmnd
 
 The codes above downloads the latest nr database from NCBI, decompresses the file and then converts nr into a DIAMOND compatible format.
 
-rebuilt diamond database: 
+however, generating the NCBI nr database is not enough as it only contains the protein sequences. it does not contain taxonomy information like taxonomic identifiers (TaxIDs). DIAMOND requires taxonomic data to assign taxonomic classifcations to your sequences. 
+ 
 ```bash
 mkdir -p /mnt/e/Krona_results/nr_db/taxonomy
 cd /mnt/e/Krona_results/nr_db/taxonomy
-
+```
 # Download taxonomy nodes, names, and taxon mapping
-wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip
-wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz
-wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/taxonomy/taxonomy.dat.gz
+```bash
+wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz
+wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+```
+prot.accession is for DIAMOND to link protein sequences with TaxIDs.
+taxdump is for DIAMOND to interpret the taxonomic relationships. 
 
 # Extract the files
-unzip taxdmp.zip
-tar -xvzf taxdb.tar.gz
-gunzip taxonomy.dat.gz
+```bash
+gunzip prot.accession2taxid.gz
+tar -xvf taxdump.tar.gz
 ```
 
 **4.Post-Processing using visualisation tools like Krona**
