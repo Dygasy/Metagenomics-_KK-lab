@@ -371,6 +371,20 @@ find "$base_dir" -type f -name "clustered_genes.fnn" | parallel -j 4 -- \
             {}
 ```
 
+OR if you want specifics
+
+```bash
+#!/bin/bash
+base_dir="/mnt/e/Krona_results/above_ids_group/AA_0015"
+kraken_db="/mnt/e/kraken2_db"
+
+find "$base_dir" -type f -name "clustered_genes.fnn" | parallel -j 4 -- \
+    kraken2 --db "$kraken_db" \
+            --threads 4 \
+            --output {= s/.fnn/_kraken2_output.txt/ =} \
+            --report {= s/.fnn/_kraken2_report.txt/ =} \
+            {}
+```
 
 
 Your output file contains kraken2 classification for each sequence (readID, taxonomic classification, etc)
