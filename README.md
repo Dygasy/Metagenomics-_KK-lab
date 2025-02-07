@@ -472,6 +472,25 @@ diamond blastx \
     --outfmt 6 qseqid staxids sscinames sskingdoms evalue bitscore
 ```
 
+Now process the DIAMOND output for taxonomic classification, producing an .rma6 file needed for MEGAN:
+```bash
+daa-meganizer -i /mnt/e/Krona_results/nr_db/diamond_output.daa -t 100 \
+--mapDB /mnt/e/Krona_results/nr_db/taxonomy/prot.accession2taxid \
+--nodes /mnt/e/Krona_results/nr_db/taxonomy/nodes.dmp \
+--names /mnt/e/Krona_results/nr_db/taxonomy/names.dmp
+```
+
+Visualise in MEGAN and you can explore the taxonomic assignments
+Load the .rma6 file into MEGAN for visualisation:
+```bash
+megan -i /mnt/e/Krona_results/nr_db/diamond_output.rma6
+```
+
+Click on Tree --> Taxonomy to see the hierarchical classification of your sequences. You can expand nodes to see how many reads are assigned to different taxa(phylum, genus, species).
+Adjust and set the minimum support filter to only include taxa with significant read counts. Fine tune your LCA Parameters to improve taxonomic resolution.
+
+Do Functional database through the MEGANization step (like KEGGm eggNOG) 
+Click on Tree --> Functional to explore functions such as metabolic pathways, enzyme activities
 
 **4.Post-Processing using visualisation tools like Krona**
 
