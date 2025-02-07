@@ -394,7 +394,15 @@ Kraken2 alone assigns taxonomic labels based on k-mer matches, which can sometim
 
 Now convert your clustered_genes.fnn file into an input.fasta. input.fasta file is the query sequence file that you provide for DIAMOND (next software) to search against the nr database. It contains the nucleotide or protein sequences that you want to analyse. 
 ```bash
-cp /mnt/e/Krona_results/above_ids_group/AA_0142/clustered_genes.fnn /mnt/e/Krona_results/nr_db/input.fasta
+for folder in AA_*; do
+    cp "$folder/clustered_genes.fnn" "$folder/input_above.fasta"
+done
+```
+OR
+```bash
+for folder in AA_*; do
+    cp "$folder/clustered_genes.fnn" "$folder/input_below.fasta"
+done
 ```
 
 verify that the input.fasta is correctly formatted. it should look something like this (so prettyyy):
@@ -416,6 +424,7 @@ Use DIAMOND+MEGAN:
 
 You would want to import DIAMOND Results into MEGAN
 MEGAN is faster alternative to BLAST for classifying reads but first you have to run DIAMOND with taxonomy output enabled.
+
 **3.Post-Processing using DIAMOND**
 We will be using NCBI's nr database, input the metagenomic reads to produce an output DIAMOND results. Filter the weak matches and report only the best match.
 
