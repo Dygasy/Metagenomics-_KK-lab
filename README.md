@@ -470,6 +470,16 @@ diamond makedb \
     --taxonnames /mnt/e/Krona_results/nr_db/taxonomy/names.dmp
 ```
 
+Clean all FASTA Files in both groups (eg: above_ids_group): this is to avoid possibility of tab characters (\t) in the seqeunce titles (headers) of your FASTA file. DIAMOND expects FASTA headers to be free from special characters like tabs, as this can cause parsing issues. We do not want it to affect any accuracy of downstream analysis, especially when linking taxonomic information. 
+
+```bash
+for fasta in /mnt/e/Krona_results/above_ids_group/AA_*/input_above.fasta; do
+    sed -i 's/\t/ /g' "$fasta"
+    echo "Cleaned tabs in $fasta"
+done
+```
+
+
 Now run DIAMOND BLASTX once you've created nr_tax.dmnd
 ```bash
 diamond blastx \
