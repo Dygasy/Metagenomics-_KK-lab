@@ -482,21 +482,21 @@ done
 
 Now run DIAMOND BLASTX once you've created nr_tax.dmnd
 ```bash
-diamond blastx \
-    -d /mnt/e/Krona_results/nr/nr_tax.dmnd \
-    -q /mnt/e/Krona_results/nr_db/input.fasta \
-    -o /mnt/e/Krona_results/nr_db/diamond_output.daa \
-    --evalue 0.001 \
-    --max-target-seqs 1 \
-    --outfmt 6 qseqid staxids sscinames sskingdoms evalue bitscore
+#!/bin/bash
+for dir in /mnt/e/Krona_results/above_ids_group/AA_*; do
+    sample=$(basename $dir)
+    diamond blastx -d /mnt/e/Krona_results/nr/nr_tax.dmnd \
+        -q $dir/input_above.fasta \
+        -o $dir/diamond_output_above.daa \
+        --evalue 0.001 --max-target-seqs 1 --outfmt 100
+done
 ```
 
 Now process the DIAMOND output for taxonomic classification, producing an .rma6 file needed for MEGAN:
 ```bash
-daa-meganizer -i /mnt/e/Krona_results/nr_db/diamond_output.daa -t 100 \
---mapDB /mnt/e/Krona_results/nr_db/taxonomy/prot.accession2taxid \
---nodes /mnt/e/Krona_results/nr_db/taxonomy/nodes.dmp \
---names /mnt/e/Krona_results/nr_db/taxonomy/names.dmp
+daa-meganizer -i /mnt/e/Krona_results/above_ids_group/AA_0008/diamond_output_above.daa \
+              --mapDB /mnt/e/Krona_results/nr_db/megan/megan-map-Feb2022.db/megan-map-Feb2022.db \
+              -t 100
 ```
 
 Visualise in MEGAN and you can explore the taxonomic assignments
