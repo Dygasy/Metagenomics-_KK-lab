@@ -498,6 +498,21 @@ daa-meganizer -i /mnt/e/Krona_results/above_ids_group/AA_0008/diamond_output_abo
               --mapDB /mnt/e/Krona_results/nr_db/megan/megan-map-Feb2022.db/megan-map-Feb2022.db \
               -t 100
 ```
+OR 
+```bash
+mnt/e/Krona_results/nr_db/megan/tools$ /mnt/e/Krona_results/nr_db/megan/tools/daa2rma \
+  -i /mnt/e/Krona_results/above/AA_0009/diamond_output_above.daa \
+  -o /mnt/e/Krona_results/above/AA_0009/diamond_output_above.rma6 \
+  --mapDB /mnt/e/Krona_results/nr_db/megan/megan-map-Feb2022.db \
+  -t 100
+```
+OR
+```bash
+daa2rma -i /mnt/e/Krona_results/above/AA_0009/diamond_output_above.daa \
+              -o /mnt/e/Krona_results/above/AA_0009/diamond_output_above.rma6 \
+              --mapDB /mnt/e/Krona_results/nr_db/megan/megan-map-Feb2022.db/megan-map-Feb2022.db \
+              -t 100
+```
 
 Visualise in MEGAN and you can explore the taxonomic assignments
 Load the .rma6 file into MEGAN for visualisation:
