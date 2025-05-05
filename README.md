@@ -318,7 +318,7 @@ This is if you are looking to specifically aligned and have detailed taxonomic o
 - hundreds of GBs will be downloaded
 - More manual work to extract meaningful taxonomic or functional insights
 
-We will be using Kraken2 in the meantime for quick and efficient taxonomic classificationof metagenomic reads.
+We will be using Kraken2 in the meantime for quick and efficient taxonomic classification of metagenomic reads.
 + Kraken2 uses k-mer based classification, making it extremely fast
 + Lightweight: no need to align entire sequences, saves time and computational power
 + Built in classification: automatically assigns reads to taxa, making it simpler for metagenomics workflows
