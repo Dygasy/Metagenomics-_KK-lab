@@ -301,6 +301,12 @@ GFF format provides detailed annotations, which are useful for downstream analys
 
 Manual downloads ensure better control over the extraction process, avoiding complications with compressed files. tried it and it didnt work. 
 
+
+
+
+
+
+
 ## Taxonomic Classification using Kraken 2
 **1.Use of Pre-built Microbial Database**
 Many pre-built microbial reference database are optimised for metagenomics:
