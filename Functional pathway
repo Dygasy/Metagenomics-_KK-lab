@@ -1,0 +1,26 @@
+Functional Pathway
+EggNOG-mapper database: 
+Ensure you have the following: 
+1. eggnog.db
+2. eggnog_proteins.dmnd
+3.eggnog.taxa.db
+4.eggnog.taxa.db.traverse.pkl
+
+Run script: 
+```bash
+
+emapper.py \
+  -i /mnt/e/Krona_results/processed_files/below/AA_folders/AA_0001/gmhmmp.out.faa \
+  --itype proteins \
+  --output AA_0001 \
+  --output_dir /mnt/d/eggnog_mapper_output \
+  --data_dir /mnt/d/eggnogmapper_data_latest \
+  --cpu 60 \
+  --target_orthologs all \
+  --report_orthologs \
+  --go_evidence non-electronic \
+  --pfam_realign realign \
+  --no_file_comments \
+  --override
+```
+
