@@ -403,3 +403,60 @@ Do Functional database through the MEGANization step (like KEGGm eggNOG)
 Click on Tree --> Functional to explore functions such as metabolic pathways, enzyme activities
 
 
+Use of GTDB: produce more consistency across genus/species, allow to do Krona plots, able to integrate with tools like PICRUSt2, GTDB-tk or QIIME2.
+- based on genome-resolved taxonomy, highly curated, consistent, modern classification
+-ideal for genome-centric metagenomics 
+-Works well with Kraken2 + Bracken + MetaPhlAn, of GTDB-tk outputs
+
+
+
+## Generate Krona HTML Plots 
+import os
+import re
+
+# === Input & Output Paths ===
+input_file = "comparison_cleaned_absolute.txt"
+output_dir = "krona_inputs_with_environmental"
+os.makedirs(output_dir, exist_ok=True)
+
+# === Read and Prepare ===
+with open(input_file, "r", encoding="utf-8") as f:
+    lines = f.readlines()
+
+header = lines[0].strip().split("\t")
+sample_ids = header[1:]
+
+# === Create Output Files ===
+output_files = {
+    sample: open(os.path.join(output_dir, f"{sample}.krona.txt"), "w")
+    for sample in sample_ids
+}
+
+# === Process Each Line ===
+for line in lines[1:]:
+    parts = line.strip().split("\t")
+
+    # Restore full taxonomy (keep environmental and angle-bracket tags)
+    taxonomy_raw = parts[0]
+    taxonomy_clean = taxonomy_raw.replace(",", " ")  # ONLY replace commas (Krona can't parse tabs inside fields)
+
+    raw_tax = taxonomy_clean.strip().split(";")
+    taxonomy = raw_tax[:8]  # keep up to 8 ranks (strain-level), no padding if fewer
+
+    # Write Krona-compatible output per sample
+    for i, count in enumerate(parts[1:]):
+        sample = sample_ids[i]
+        try:
+            c = float(count)
+            if c > 0:
+                output_files[sample].write(f"{c}\t" + "\t".join(taxonomy) + "\n")
+        except ValueError:
+            continue
+
+# === Close All Files ===
+for f in output_files.values():
+    f.close()
+
+print(f"✅ Krona input files saved in: {output_dir}")
+
+
