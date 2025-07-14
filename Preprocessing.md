@@ -1,11 +1,4 @@
 # Welcome to Metagenomics Analysis Workflow
-
-## Workflow Diagram
-Below is the workflow diagram for the metagenomics analysis process:
-
-![Workflow Diagram](Initial%20Workflow%20Diagram.png)
-
-
 ---
 
 This repository provides scripts and pipelines for analyzing metagenomics data. The workflow integrates tools for preprocessing, assembly, annotation, and visualization, tailored for gut microbiome research.
