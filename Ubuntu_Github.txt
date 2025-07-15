@@ -1,0 +1,59 @@
+Sync Ubuntu to Github -Streamline codes
+
+Install Git on Ubuntu, Open the ubuntu terminal and run this code
+```bash
+sudo apt install
+sudo apt install git
+```
+
+Verify the installation by checking the Git Version
+```bash
+git --version
+```
+
+Configure Git with you GitHub credentials where you add your username and email address globally
+```bash
+git config --global user.name "Dygasy"
+git config --global user.email "nurul.asyiqin@ntu.edu.sg"
+
+Generate the SSH keys for secure access, this will create a new SSK key pair. Prompted to enter a file name (test1) and passphrase (**password**)
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "nurul.asyiqin@ntu.edu.sg")
+```
+
+Add SSH key to the ssh-agent. This starts the SSH agent and adds your private key to it, so you dont need to enter the passphrase everytime you use Git
+```bash
+eval "$(ssh-agent -s)
+ssh-add ~/test1
+
+copy the public key to your clipboard
+```bash
+cat ~/test1.pub
+```
+they will provide the long winded output. Copy and then add the public key to you Github accounts under settings>SSH adn GPG keys. 
+
+Clone a repository from Github
+```bash
+git clone git@github.com:Dygasy/Metagenomics_V2
+```
+They will ask if we want to continue, type yes
+
+```bash
+cd Metagenomics_V2
+```
+
+Should we need to add a file in then
+```bash
+echo "write in the notes that you want" >hello.txt
+```
+
+```bash
+git add hello.txt
+```
+
+```bash
+git commit -m "added new notes and import a new file"
+
+git push
+```
